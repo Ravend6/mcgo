@@ -35,6 +35,9 @@ func main() {
 	
 	time.Sleep(5 * time.Second)
 	
+	glfw.CloseWindow()
+	glfw.Terminate()
+	
 	fmt.Println("the end")
 }
 
