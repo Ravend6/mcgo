@@ -11,6 +11,8 @@ import (
 
 var width = flag.Int("width", 800, "width of the window")
 var height = flag.Int("height", 600, "height of the window")
+var xpos = flag.Int("xpos", -1, "default x position of the window (-1 for none)")
+var ypos = flag.Int("ypos", -1, "default y position of the window (-1 for none)")
 var fullscreen = flag.Bool("fullscreen", false, "enable fullscreen")
 
 func main() {
@@ -54,6 +56,10 @@ func openWindow() bool {
 	}
 
 	glfw.SetWindowTitle("Minecraft Go")
+	
+	if *xpos > -1 && *ypos > -1 {
+		glfw.SetWindowPos(*xpos, *ypos)
+	}
 
 	return true
 }
