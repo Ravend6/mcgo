@@ -9,24 +9,27 @@ import (
 	"time"
 )
 
-var width = flag.Int("width", 800, "width of the window")
-var height = flag.Int("height", 600, "height of the window")
-var xpos = flag.Int("xpos", -1, "default x position of the window (-1 for none)")
-var ypos = flag.Int("ypos", -1, "default y position of the window (-1 for none)")
-var fullscreen = flag.Bool("fullscreen", false, "enable fullscreen")
+var flagWidth = flag.Int("width", 800, "width of the window")
+var flagHeight = flag.Int("height", 600, "height of the window")
+var flagXpos = flag.Int("xpos", -1, "default x position of the window (-1 for none)")
+var flagYpos = flag.Int("ypos", -1, "default y position of the window (-1 for none)")
+var flagFullscreen = flag.Bool("fullscreen", false, "enable fullscreen")
 
 func main() {
 	fmt.Println("starting")
 	flag.Parse()
 
-	openWindow()
-	initGL()
-	
-	for {
-		drawScene()
+	if !openWindow() {
+		return;
 	}
 	
-	time.Sleep(5 * time.Second)
+	initGL()
+	
+	keepRunning := true
+	
+	for keepRunning {
+		drawScene()
+	}
 	
 	glfw.CloseWindow()
 	glfw.Terminate()
@@ -44,12 +47,12 @@ func openWindow() bool {
 	}
 	
 	windowMode := glfw.Windowed
-	if *fullscreen {
+	if *flagFullscreen {
 		windowMode = glfw.Fullscreen
-		(*width) = 0
-		(*height) = 0
+		(*flagWidth) = 0
+		(*flagHeight) = 0
 	}
-	err = glfw.OpenWindow(*width, *height, 8, 8, 8, 8, 24, 0, windowMode)
+	err = glfw.OpenWindow(*flagWidth, *flagHeight, 8, 8, 8, 8, 24, 0, windowMode)
 	if err != nil {
 		fmt.Printf("glfw.OpenWindow: %s", err)
 		return false
@@ -57,8 +60,8 @@ func openWindow() bool {
 
 	glfw.SetWindowTitle("Minecraft Go")
 	
-	if *xpos > -1 && *ypos > -1 {
-		glfw.SetWindowPos(*xpos, *ypos)
+	if *flagXpos > -1 && *flagYpos > -1 {
+		glfw.SetWindowPos(*flagXpos, *flagYpos)
 	}
 
 	return true
@@ -74,10 +77,14 @@ func initGL() {
 	gl.DepthFunc(gl.LEQUAL)
 	gl.Hint(gl.PERSPECTIVE_CORRECTION_HINT, gl.NICEST)
 	
-	gl.Viewport(0, 0, *width, *height)
+	width, height := glfw.WindowSize()
+	
+	gl.Viewport(0, 0, width, height)
+	
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
-	glu.Perspective(45.0, float64(*width)/float64(*height), 0.1, 100.0)
+	glu.Perspective(45.0, float64(width)/float64(height), 0.1, 100.0)
+	
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
 }
@@ -86,10 +93,9 @@ func drawScene() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.LoadIdentity()
 	
-	gl.Translatef(0, 0, 0)
+	gl.Translatef(1, 0, -4)
 	t := time.Now()
-	var millisecond float32 = (float32)(t.Second() * 1000 + t.Nanosecond() / 1000000)
-//	gl.Rotatef((float32)(((float32(time.Now().Nanosecond()) / 1000000000.0) * 360)), 0, 1, 0)
+	millisecond := (float32)(t.Second() * 1000 + t.Nanosecond() / 1000000)
 	gl.Rotatef(10, 1, 0, 0)
 	gl.Rotatef((millisecond / 1000) * 360, 0, 1, 0)
 	
