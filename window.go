@@ -29,6 +29,10 @@ func main() {
 	
 	for keepRunning {
 		drawScene()
+		
+		if glfw.Key(glfw.KeyEsc) == glfw.KeyPress || glfw.WindowParam(glfw.Opened) == 0 {
+			keepRunning = false
+		}
 	}
 	
 	glfw.CloseWindow()
@@ -79,6 +83,10 @@ func initGL() {
 	
 	width, height := glfw.WindowSize()
 	
+	if height == 0 {
+		height = 1
+	}
+	
 	gl.Viewport(0, 0, width, height)
 	
 	gl.MatrixMode(gl.PROJECTION)
@@ -87,13 +95,17 @@ func initGL() {
 	
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
+	glu.LookAt(
+		0, 0, 0, // position
+		0, 0, -1, // direction
+		0, 1, 0) // up
 }
 
 func drawScene() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.LoadIdentity()
 	
-	gl.Translatef(1, 0, -4)
+	gl.Translatef(0, 0, -4)
 	t := time.Now()
 	millisecond := (float32)(t.Second() * 1000 + t.Nanosecond() / 1000000)
 	gl.Rotatef(10, 1, 0, 0)
