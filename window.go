@@ -92,23 +92,23 @@ func initGL() {
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
 	glu.Perspective(45.0, float64(width)/float64(height), 0.1, 100.0)
+	glu.LookAt(
+		0, 0, 0, // position
+		0, 0, 1, // direction
+		0, 1, 0) // up
 	
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
-	glu.LookAt(
-		0, 0, 0, // position
-		0, 0, -1, // direction
-		0, 1, 0) // up
 }
 
 func drawScene() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.LoadIdentity()
 	
-	gl.Translatef(0, 0, -4)
+	gl.Translatef(0, 0, 4)
 	t := time.Now()
 	millisecond := (float32)(t.Second() * 1000 + t.Nanosecond() / 1000000)
-	gl.Rotatef(10, 1, 0, 0)
+//	gl.Rotatef(10, 1, 0, 0)
 	gl.Rotatef((millisecond / 1000) * 360, 0, 1, 0)
 	
 	gl.Color3f(1, 0, 1)
