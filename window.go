@@ -20,12 +20,14 @@ func main() {
 		return;
 	}
 	
-	initGL()
+	var mRenderer Renderer
+	
+	mRenderer.initGL()
 	
 	keepRunning := true
 	
 	for keepRunning {
-		drawScene()
+		mRenderer.drawScene()
 		
 		if glfw.Key(glfw.KeyEsc) == glfw.KeyPress || glfw.WindowParam(glfw.Opened) == 0 {
 			keepRunning = false

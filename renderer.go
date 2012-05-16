@@ -1,15 +1,17 @@
 package main
 
 import (
-//	"fmt"
 	"github.com/banthar/gl"
 	"github.com/banthar/glu"
 	"github.com/jteeuwen/glfw"
-	"time"
 )
 
 
-func initGL() {
+type Renderer struct {
+	
+}
+
+func (r *Renderer) initGL() {
 	glfw.SetSwapInterval(1)
 	
 	gl.ShadeModel(gl.SMOOTH)
@@ -39,15 +41,13 @@ func initGL() {
 	gl.LoadIdentity()
 }
 
-func drawScene() {
+func (r *Renderer) drawScene() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.LoadIdentity()
 	
 	gl.Translatef(0, 0, 4)
-	t := time.Now()
-	millisecond := (float32)(t.Second() * 1000 + t.Nanosecond() / 1000000)
 //	gl.Rotatef(10, 1, 0, 0)
-	gl.Rotatef((millisecond / 1000) * 360, 0, 1, 0)
+	gl.Rotatef((GetTime() / 1000.0) * 360, 0, 1, 0)
 	
 	gl.Color3f(1, 0, 1)
 	gl.Begin(gl.QUADS) // a

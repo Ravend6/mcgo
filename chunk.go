@@ -15,3 +15,14 @@ func (c *Chunk) GetBlocks() (blocks *[16][256][16]*Block) {
 	return &c.blocks
 }
 
+func (c *Chunk) CheckVertices() {
+	
+	for indexX, _ := range c.blocks {
+		for indexY, _ := range c.blocks[indexX] {
+			for indexZ, value := range c.blocks[indexX][indexY] {
+				
+			}
+		}
+	}
+}
+
