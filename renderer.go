@@ -28,15 +28,13 @@ func (r *Renderer) initGL() {
 	}
 	
 	gl.Viewport(0, 0, width, height)
-	
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
-	glu.Perspective(45.0, float64(width)/float64(height), 0.1, 100.0)
+	glu.Perspective(65.0, float64(width)/float64(height), 0.1, 100.0)
 	glu.LookAt(
 		0, 0, 0, // position
 		0, 0, 1, // direction
 		0, 1, 0) // up
-	
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
 }
@@ -45,9 +43,9 @@ func (r *Renderer) drawScene() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.LoadIdentity()
 	
+	
 	gl.Translatef(0, 0, 4)
-//	gl.Rotatef(10, 1, 0, 0)
-	gl.Rotatef((GetTime() / 1000.0) * 360, 0, 1, 0)
+//	gl.Rotatef((GetTime() / 1000.0) * 360, 0, 1, 0)
 	
 	gl.Color3f(1, 0, 1)
 	gl.Begin(gl.QUADS) // a

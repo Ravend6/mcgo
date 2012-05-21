@@ -25,25 +25,51 @@ func (b *Block) GetPosition() (x uint8, y uint8, z uint8) {
 	return b.xz%16, b.y, b.xz/16
 }
 
-func (b *Block) SetVisibleSides(plusX bool, minusX bool, plusY bool, minusY bool, plusZ bool, minusZ bool) {
-	b.visibleSides = 0
-	if plusX {
-		b.visibleSides |= 0x1
+func (b *Block) SetVisibleSidePlusX(visible bool) {
+	if visible {
+		b.visibleSides |= uint8(0x1)
+	} else {
+		b.visibleSides &= ^uint8(0x1)
 	}
-	if minusX {
-		b.visibleSides |= 0x2
+}
+
+func (b *Block) SetVisibleSideMinusX(visible bool) {
+	if visible {
+		b.visibleSides |= uint8(0x2)
+	} else {
+		b.visibleSides &= ^uint8(0x2)
 	}
-	if plusY {
-		b.visibleSides |= 0x4
+}
+
+func (b *Block) SetVisibleSidePlusY(visible bool) {
+	if visible {
+		b.visibleSides |= uint8(0x4)
+	} else {
+		b.visibleSides &= ^uint8(0x4)
 	}
-	if minusY {
-		b.visibleSides |= 0x8
+}
+
+func (b *Block) SetVisibleSideMinusY(visible bool) {
+	if visible {
+		b.visibleSides |= uint8(0x8)
+	} else {
+		b.visibleSides &= ^uint8(0x8)
 	}
-	if plusZ {
-		b.visibleSides |= 0x10
+}
+
+func (b *Block) SetVisibleSidePlusZ(visible bool) {
+	if visible {
+		b.visibleSides |= uint8(0x10)
+	} else {
+		b.visibleSides &= ^uint8(0x10)
 	}
-	if minusZ {
-		b.visibleSides |= 0x20
+}
+
+func (b *Block) SetVisibleSideMinusZ(visible bool) {
+	if visible {
+		b.visibleSides |= uint8(0x20)
+	} else {
+		b.visibleSides &= ^uint8(0x20)
 	}
 }
 

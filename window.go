@@ -7,7 +7,29 @@ import (
 
 
 type Window struct {
+	mRenderer *Renderer
+	mKeepRunning bool
+}
+
+func (w *Window) Start() {
+	defer w.Close()
 	
+	if !w.openWindow() {
+		return
+	}
+	
+	w.mRenderer.initGL()
+	
+	w.mKeepRunning = true
+	
+	for w.mKeepRunning {
+		w.mRenderer.drawScene()
+	}
+}
+
+func (w *Window) Close() {
+	w.mKeepRunning = false
+	glfw.CloseWindow()
 }
 
 func (w *Window) openWindow() bool {
@@ -33,9 +55,6 @@ func (w *Window) openWindow() bool {
 		return false
 	}
 	
-	// Ensure window is cleanly closed on exit.
-	defer glfw.CloseWindow()
-
 	glfw.SetWindowTitle("Minecraft Go")
 	
 	// set window position if defined
@@ -44,18 +63,18 @@ func (w *Window) openWindow() bool {
 	}
 	
 	// callbacks
-	glfw.SetWindowSizeCallback(onResize)
-	glfw.SetWindowCloseCallback(onClose)
-
+/*	glfw.SetWindowSizeCallback(onResize)
+	glfw.SetWindowCloseCallback(onClose)*/
+	
 	return true
 }
 
-func onResize(width, height int) {
+func (w *Window) onResize(width, height int) {
 	
 }
 
-func onClose() int {
-	Close()
+func (w *Window) onClose() int {
+	w.Close()
 	return 1
 }
 

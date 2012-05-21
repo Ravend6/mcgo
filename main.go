@@ -16,30 +16,9 @@ func main() {
 	flag.Parse()
 	
 	var mWindow Window
-
-	if !mWindow.openWindow() {
-		return;
-	}
-	
-	var mRenderer Renderer
-	
-	mRenderer.initGL()
-	
-	keepRunning := true
-	
-	// TODO put this in window?
-	for keepRunning {
-		mRenderer.drawScene()
-		
-		// TODO put this in window and input handler
-		if glfw.Key(glfw.KeyEsc) == glfw.KeyPress || glfw.WindowParam(glfw.Opened) == 0 {
-			keepRunning = false
-		}
-	}
-	
-	glfw.CloseWindow()
-	glfw.Terminate()
+	mWindow.Start()
 	
 	fmt.Println("the end")
 }
+
 
