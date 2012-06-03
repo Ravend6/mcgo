@@ -1,7 +1,7 @@
 package main
 
 import (
-	"time"
+	"github.com/jteeuwen/glfw"
 )
 
 
@@ -12,9 +12,8 @@ type Vector struct {
 
 
 // returns milliseconds
-func GetTime() float32 {
-	t := time.Now()
-	millisecond := (float32)(t.Second() * 1000 + t.Nanosecond() / 1000000)
-	return millisecond
+func GetTime() int {
+	return int(glfw.Time() * 1000)
 }
+
 

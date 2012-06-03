@@ -1,7 +1,6 @@
 package main
 
 import (
-//	"fmt"
 )
 
 
@@ -20,7 +19,7 @@ func (c *Chunk) GetBlocks() (blocks *[16][256][16]*Block) {
 	return &c.blocks
 }
 
-func (c *Chunk) CheckVertices() {
+func (c *Chunk) UpdateAllVisibleSides() {
 	var zStartSecond bool = false
 	// go through all block
 	for indexX, _ := range c.blocks {
@@ -35,65 +34,68 @@ func (c *Chunk) CheckVertices() {
 				zStartSecond = true
 			}
 			for ; indexZ < 16; indexZ = indexZ+2 {
-				// check if block exists
-				if c.blocks[indexX][indexY][indexZ] == nil {
-					// tell all surrounding squares to be visible
-					
-					// check for lower edge
-					if indexX == 0 {
-						// TODO do something	
-					} else {
-						if c.blocks[indexX-1][indexY][indexZ] != nil {
-							c.blocks[indexX-1][indexY][indexZ].SetVisibleSidePlusX(true)
-						}
-					}
-					// check for higher edge
-					if indexX == 255 {
-						// TODO do something
-					} else {
-						if c.blocks[indexX+1][indexY][indexZ] != nil {
-							c.blocks[indexX+1][indexY][indexZ].SetVisibleSideMinusX(true)
-						}
-					}
-					
-					// check for lower edge
-					if indexX == 0 {
-						// TODO do something	
-					} else {
-						if c.blocks[indexX][indexY-1][indexZ] != nil {
-							c.blocks[indexX][indexY-1][indexZ].SetVisibleSidePlusY(true)
-						}
-					}
-					// check for higher edge
-					if indexX == 255 {
-						// TODO do something
-					} else {
-						if c.blocks[indexX][indexY+1][indexZ] != nil {
-							c.blocks[indexX][indexY+1][indexZ].SetVisibleSideMinusY(true)
-						}
-					}
-					
-					// check for lower edge
-					if indexZ == 0 {
-						// TODO do something	
-					} else {
-						if c.blocks[indexX][indexY][indexZ-1] != nil {
-							c.blocks[indexX][indexY][indexZ-1].SetVisibleSidePlusZ(true)
-						}
-					}
-					// check for higher edge
-					if indexX == 255 {
-						// TODO do something
-					} else {
-						if c.blocks[indexX][indexY][indexZ+1] != nil {
-							c.blocks[indexX][indexY][indexZ+1].SetVisibleSideMinusZ(true)
-						}
-					}
-				} else {
-					
-				}
+				c.UpdateBlockVisibleSides(&indexX, &indexY, &indexZ)
 			}
 		}
 	}
 }
 
+func (c *Chunk) UpdateBlockVisibleSides(posX, posY, posZ *int) {
+	// check if block exists
+	if c.blocks[(*posX)][(*posY)][(*posZ)] == nil {
+		// tell all surrounding squares to be visible
+	
+		// check for lower edge
+		if (*posX) == 0 {
+			// TODO do something	
+		} else {
+			if c.blocks[(*posX)-1][(*posY)][(*posZ)] != nil {
+				c.blocks[(*posX)-1][(*posY)][(*posZ)].SetVisibleSidePlusX(true)
+			}
+		}
+		// check for higher edge
+		if (*posX) == 255 {
+			// TODO do something
+		} else {
+			if c.blocks[(*posX)+1][(*posY)][(*posZ)] != nil {
+				c.blocks[(*posX)+1][(*posY)][(*posZ)].SetVisibleSideMinusX(true)
+			}
+		}
+		
+		// check for lower edge
+		if (*posX) == 0 {
+			// TODO do something	
+		} else {
+			if c.blocks[(*posX)][(*posY)-1][(*posZ)] != nil {
+				c.blocks[(*posX)][(*posY)-1][(*posZ)].SetVisibleSidePlusY(true)
+			}
+		}
+		// check for higher edge
+		if (*posX) == 255 {
+			// TODO do something
+		} else {
+			if c.blocks[(*posX)][(*posY)+1][(*posZ)] != nil {
+				c.blocks[(*posX)][(*posY)+1][(*posZ)].SetVisibleSideMinusY(true)
+			}
+		}
+		
+		// check for lower edge
+		if (*posZ) == 0 {
+			// TODO do something	
+		} else {
+			if c.blocks[(*posX)][(*posY)][(*posZ)-1] != nil {
+				c.blocks[(*posX)][(*posY)][(*posZ)-1].SetVisibleSidePlusZ(true)
+			}
+		}
+		// check for higher edge
+		if (*posX) == 255 {
+			// TODO do something
+		} else {
+			if c.blocks[(*posX)][(*posY)][(*posZ)+1] != nil {
+				c.blocks[(*posX)][(*posY)][(*posZ)+1].SetVisibleSideMinusZ(true)
+			}
+		}
+	} else {
+		
+	}
+}

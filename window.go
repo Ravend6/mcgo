@@ -1,13 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/jteeuwen/glfw"
 )
 
 
 type Window struct {
-	mRenderer *Renderer
+	mRenderer Renderer
 	mKeepRunning bool
 }
 
@@ -38,7 +37,7 @@ func (w *Window) openWindow() bool {
 	// init
 	err = glfw.Init()
 	if err != nil {
-		fmt.Printf("glfw.Init: %s", err)
+		print("glfw.Init: %s\n", err)
 		return false
 	}
 	
@@ -51,7 +50,7 @@ func (w *Window) openWindow() bool {
 	// open window
 	err = glfw.OpenWindow(*flagWidth, *flagHeight, 8, 8, 8, 8, 24, 0, windowMode)
 	if err != nil {
-		fmt.Printf("glfw.OpenWindow: %s", err)
+		print("glfw.OpenWindow: %s\n", err)
 		return false
 	}
 	

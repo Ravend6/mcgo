@@ -8,7 +8,7 @@ import (
 
 
 type Renderer struct {
-	
+	timeCurrent, timeNextSecond, frames int
 }
 
 func (r *Renderer) initGL() {
@@ -30,66 +30,79 @@ func (r *Renderer) initGL() {
 	gl.Viewport(0, 0, width, height)
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
-	glu.Perspective(65.0, float64(width)/float64(height), 0.1, 100.0)
+	glu.Perspective(45.0, float64(width)/float64(height), 0.1, 100.0)
 	glu.LookAt(
-		0, 0, 0, // position
+		0, 0, -50, // position
 		0, 0, 1, // direction
 		0, 1, 0) // up
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
+	
+	r.timeNextSecond = 1000
+	r.frames = 0
 }
 
 func (r *Renderer) drawScene() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 	gl.LoadIdentity()
 	
+	for i := 0; i < 10; i++ {
+		gl.Translatef(1.2, 0, 0)
+		gl.Rotatef((float32(GetTime()) / 1000.0) * 360, 0, 1, 0)
 	
-	gl.Translatef(0, 0, 4)
-//	gl.Rotatef((GetTime() / 1000.0) * 360, 0, 1, 0)
-	
-	gl.Color3f(1, 0, 1)
-	gl.Begin(gl.QUADS) // a
-	gl.Vertex3f(-0.5, 0.5, -0.5)
-	gl.Vertex3f(0.5, 0.5, -0.5)
-	gl.Vertex3f(0.5, -0.5, -0.5)
-	gl.Vertex3f(-0.5, -0.5, -0.5)
-	gl.End()
-	gl.Color3f(0, 1, 0)
-	gl.Begin(gl.QUADS) // b
-	gl.Vertex3f(-0.5, -0.5, -0.5)
-	gl.Vertex3f(-0.5, 0.5, -0.5)
-	gl.Vertex3f(-0.5, 0.5, 0.5)
-	gl.Vertex3f(-0.5, -0.5, 0.5)
-	gl.End()
-	gl.Color3f(0, 1, 1)
-	gl.Begin(gl.QUADS) // c
-	gl.Vertex3f(-0.5, -0.5, 0.5)
-	gl.Vertex3f(-0.5, 0.5, 0.5)
-	gl.Vertex3f(0.5, 0.5, 0.5)
-	gl.Vertex3f(0.5, -0.5, 0.5)
-	gl.End()
-	gl.Color3f(1, 0, 0)
-	gl.Begin(gl.QUADS) // d
-	gl.Vertex3f(0.5, -0.5, 0.5)
-	gl.Vertex3f(0.5, -0.5, -0.5)
-	gl.Vertex3f(0.5, 0.5, -0.5)
-	gl.Vertex3f(0.5, 0.5, 0.5)
-	gl.End()
-	gl.Color3f(0, 0, 1)
-	gl.Begin(gl.QUADS) // e
-	gl.Vertex3f(-0.5, -0.5, -0.5)
-	gl.Vertex3f(-0.5, -0.5, 0.5)
-	gl.Vertex3f(0.5, -0.5, 0.5)
-	gl.Vertex3f(0.5, -0.5, -0.5)
-	gl.End()
-	gl.Color3f(1, 1, 0)
-	gl.Begin(gl.QUADS) // f
-	gl.Vertex3f(-0.5, 0.5, -0.5)
-	gl.Vertex3f(-0.5, 0.5, 0.5)
-	gl.Vertex3f(0.5, 0.5, 0.5)
-	gl.Vertex3f(0.5, 0.5, -0.5)
-	gl.End()
+		gl.Color3f(1, 0, 1)
+		gl.Begin(gl.QUADS) // a
+		gl.Vertex3f(-0.5, 0.5, -0.5)
+		gl.Vertex3f(0.5, 0.5, -0.5)
+		gl.Vertex3f(0.5, -0.5, -0.5)
+		gl.Vertex3f(-0.5, -0.5, -0.5)
+		gl.End()
+		gl.Color3f(0, 1, 0)
+		gl.Begin(gl.QUADS) // b
+		gl.Vertex3f(-0.5, -0.5, -0.5)
+		gl.Vertex3f(-0.5, 0.5, -0.5)
+		gl.Vertex3f(-0.5, 0.5, 0.5)
+		gl.Vertex3f(-0.5, -0.5, 0.5)
+		gl.End()
+		gl.Color3f(0, 1, 1)
+		gl.Begin(gl.QUADS) // c
+		gl.Vertex3f(-0.5, -0.5, 0.5)
+		gl.Vertex3f(-0.5, 0.5, 0.5)
+		gl.Vertex3f(0.5, 0.5, 0.5)
+		gl.Vertex3f(0.5, -0.5, 0.5)
+		gl.End()
+		gl.Color3f(1, 0, 0)
+		gl.Begin(gl.QUADS) // d
+		gl.Vertex3f(0.5, -0.5, 0.5)
+		gl.Vertex3f(0.5, -0.5, -0.5)
+		gl.Vertex3f(0.5, 0.5, -0.5)
+		gl.Vertex3f(0.5, 0.5, 0.5)
+		gl.End()
+		gl.Color3f(0, 0, 1)
+		gl.Begin(gl.QUADS) // e
+		gl.Vertex3f(-0.5, -0.5, -0.5)
+		gl.Vertex3f(-0.5, -0.5, 0.5)
+		gl.Vertex3f(0.5, -0.5, 0.5)
+		gl.Vertex3f(0.5, -0.5, -0.5)
+		gl.End()
+		gl.Color3f(1, 1, 0)
+		gl.Begin(gl.QUADS) // f
+		gl.Vertex3f(-0.5, 0.5, -0.5)
+		gl.Vertex3f(-0.5, 0.5, 0.5)
+		gl.Vertex3f(0.5, 0.5, 0.5)
+		gl.Vertex3f(0.5, 0.5, -0.5)
+		gl.End()
+	}
 	
 	glfw.SwapBuffers()
+	
+	r.frames++
+	r.timeCurrent = GetTime()
+	if r.timeCurrent >= r.timeNextSecond {
+		println(r.frames)
+		
+		r.frames = 0
+		r.timeNextSecond = r.timeNextSecond + 1000
+	}
 }
 

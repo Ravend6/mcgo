@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"flag"
 )
 
@@ -12,13 +11,13 @@ var flagYpos = flag.Int("ypos", -1, "default y position of the window (-1 for no
 var flagFullscreen = flag.Bool("fullscreen", false, "enable fullscreen")
 
 func main() {
-	fmt.Println("starting")
+	println("starting")
 	flag.Parse()
 	
 	var mWindow Window
 	mWindow.Start()
 	
-	fmt.Println("the end")
+	println("the end")
 }
 
 
