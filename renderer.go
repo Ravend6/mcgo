@@ -12,7 +12,9 @@ type Renderer struct {
 }
 
 func (r *Renderer) initGL() {
-	glfw.SetSwapInterval(1)
+	if *flagVSync {
+		glfw.SetSwapInterval(1)
+	}
 	
 	gl.ShadeModel(gl.SMOOTH)
 	gl.ClearColor(0, 0, 0, 0)
