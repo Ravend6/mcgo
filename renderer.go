@@ -9,9 +9,15 @@ import (
 
 type Renderer struct {
 	timeCurrent, timeNextSecond, frames int
+	
+	mWorld *World
 }
 
-func (r *Renderer) initGL() {
+func (r *Renderer) Init(world *World) {
+	r.mWorld = world
+}
+
+func (r *Renderer) InitGL() {
 	if *flagVSync {
 		glfw.SetSwapInterval(1)
 	}
@@ -44,57 +50,107 @@ func (r *Renderer) initGL() {
 	r.frames = 0
 }
 
-func (r *Renderer) drawScene() {
-	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-	gl.LoadIdentity()
+func (r *Renderer) createBlock(block *Block) {
+	if block == nil || block.IsVisible() == false {
+		return
+	}
 	
-	for i := 0; i < 10; i++ {
-		gl.Translatef(1.2, 0, 0)
-		gl.Rotatef((float32(GetTime()) / 1000.0) * 360, 0, 1, 0)
+	plusX, minusX, plusY, minusY, plusZ, minusZ := block.GetVisibleSides()
 	
-		gl.Color3f(1, 0, 1)
-		gl.Begin(gl.QUADS) // a
-		gl.Vertex3f(-0.5, 0.5, -0.5)
-		gl.Vertex3f(0.5, 0.5, -0.5)
-		gl.Vertex3f(0.5, -0.5, -0.5)
-		gl.Vertex3f(-0.5, -0.5, -0.5)
-		gl.End()
-		gl.Color3f(0, 1, 0)
-		gl.Begin(gl.QUADS) // b
-		gl.Vertex3f(-0.5, -0.5, -0.5)
-		gl.Vertex3f(-0.5, 0.5, -0.5)
-		gl.Vertex3f(-0.5, 0.5, 0.5)
-		gl.Vertex3f(-0.5, -0.5, 0.5)
-		gl.End()
-		gl.Color3f(0, 1, 1)
-		gl.Begin(gl.QUADS) // c
-		gl.Vertex3f(-0.5, -0.5, 0.5)
-		gl.Vertex3f(-0.5, 0.5, 0.5)
-		gl.Vertex3f(0.5, 0.5, 0.5)
-		gl.Vertex3f(0.5, -0.5, 0.5)
-		gl.End()
+	block.DisplayList = gl.GenLists(1)
+	gl.NewList(block.DisplayList, gl.COMPILE)
+	gl.Materialfv(gl.FRONT, gl.AMBIENT_AND_DIFFUSE, []float32{0.5, 0.5, 0.5, 1.0})
+	
+	// +x
+	if plusX {
 		gl.Color3f(1, 0, 0)
-		gl.Begin(gl.QUADS) // d
+		gl.Begin(gl.QUADS)
 		gl.Vertex3f(0.5, -0.5, 0.5)
 		gl.Vertex3f(0.5, -0.5, -0.5)
 		gl.Vertex3f(0.5, 0.5, -0.5)
 		gl.Vertex3f(0.5, 0.5, 0.5)
 		gl.End()
+	}
+	
+	// -x
+	if minusX {
+		gl.Color3f(0, 1, 0)
+		gl.Begin(gl.QUADS)
+		gl.Vertex3f(-0.5, -0.5, -0.5)
+		gl.Vertex3f(-0.5, 0.5, -0.5)
+		gl.Vertex3f(-0.5, 0.5, 0.5)
+		gl.Vertex3f(-0.5, -0.5, 0.5)
+		gl.End()
+	}
+	
+	// +y
+	if plusY {
+		gl.Color3f(0, 1, 1)
+		gl.Begin(gl.QUADS)
+		gl.Vertex3f(-0.5, -0.5, 0.5)
+		gl.Vertex3f(-0.5, 0.5, 0.5)
+		gl.Vertex3f(0.5, 0.5, 0.5)
+		gl.Vertex3f(0.5, -0.5, 0.5)
+		gl.End()
+	}
+	
+	// -y (?)
+	if minusY {
 		gl.Color3f(0, 0, 1)
-		gl.Begin(gl.QUADS) // e
+		gl.Begin(gl.QUADS)
 		gl.Vertex3f(-0.5, -0.5, -0.5)
 		gl.Vertex3f(-0.5, -0.5, 0.5)
 		gl.Vertex3f(0.5, -0.5, 0.5)
 		gl.Vertex3f(0.5, -0.5, -0.5)
 		gl.End()
+	}
+	
+	// +z (?)
+	if plusZ {
+		gl.Color3f(1, 0, 1)
+		gl.Begin(gl.QUADS)
+		gl.Vertex3f(-0.5, 0.5, -0.5)
+		gl.Vertex3f(0.5, 0.5, -0.5)
+		gl.Vertex3f(0.5, -0.5, -0.5)
+		gl.Vertex3f(-0.5, -0.5, -0.5)
+		gl.End()
+	}
+	
+	// -z (?)
+	if minusZ {
 		gl.Color3f(1, 1, 0)
-		gl.Begin(gl.QUADS) // f
+		gl.Begin(gl.QUADS)
 		gl.Vertex3f(-0.5, 0.5, -0.5)
 		gl.Vertex3f(-0.5, 0.5, 0.5)
 		gl.Vertex3f(0.5, 0.5, 0.5)
 		gl.Vertex3f(0.5, 0.5, -0.5)
 		gl.End()
 	}
+	
+	gl.EndList()
+}
+
+func (r *Renderer) CreateChunk(chunk *Chunk) {
+	if chunk == nil {
+		return
+	}
+	
+	for indexX, _ := range chunk.blocks {
+		for indexY, _ := range chunk.blocks[indexX] {
+			for _, block := range chunk.blocks[indexX][indexY] {
+				if block != nil {
+					if block.IsVisible() {
+						r.createBlock(block)
+					}
+				}
+			}
+		}
+	}
+}
+
+func (r *Renderer) drawScene() {
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.LoadIdentity()
 	
 	glfw.SwapBuffers()
 	

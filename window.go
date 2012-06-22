@@ -7,6 +7,7 @@ import (
 
 type Window struct {
 	mRenderer Renderer
+	mWorld World
 	mKeepRunning bool
 }
 
@@ -17,7 +18,8 @@ func (w *Window) Start() {
 		return
 	}
 	
-	w.mRenderer.initGL()
+	w.mRenderer.Init(&w.mWorld)
+	w.mRenderer.InitGL()
 	
 	w.mKeepRunning = true
 	
