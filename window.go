@@ -2,35 +2,63 @@ package main
 
 import (
 	"github.com/jteeuwen/glfw"
+	"time"
 )
 
 
 type Window struct {
-	mRenderer Renderer
-	mWorld World
-	mKeepRunning bool
+	renderer Renderer
+	world World
+	input Input
+	camera Camera
+	
+	keepRunning bool
 }
 
+var window *Window
+
 func (w *Window) Start() {
+	window = w
+	
+	println("Window::Start")
+	defer println("END Window::Start")
+	
 	defer w.Close()
 	
 	if !w.openWindow() {
 		return
 	}
 	
-	w.mRenderer.Init(&w.mWorld)
-	w.mRenderer.InitGL()
+	// callback
+	glfw.SetWindowCloseCallback(onClose)
 	
-	w.mKeepRunning = true
+	w.world.Init(&w.renderer)
 	
-	for w.mKeepRunning {
-		w.mRenderer.drawScene()
+	w.renderer.Init(&w.world, &w.camera)
+	w.renderer.InitGL()
+	
+	w.input.Init(w)
+	
+	// run threads
+	go w.renderer.Start()
+	go w.input.Start()
+	
+	w.keepRunning = true
+	for w.keepRunning {
+		time.Sleep(100 * time.Millisecond)
 	}
 }
 
 func (w *Window) Close() {
-	w.mKeepRunning = false
+	w.Stop()
 	glfw.CloseWindow()
+	glfw.Terminate()
+}
+
+func (w *Window) Stop() {
+	w.keepRunning = false
+	w.renderer.Stop()
+	time.Sleep(500 * time.Millisecond)
 }
 
 func (w *Window) openWindow() bool {
@@ -63,19 +91,11 @@ func (w *Window) openWindow() bool {
 		glfw.SetWindowPos(*flagXpos, *flagYpos)
 	}
 	
-	// callbacks
-/*	glfw.SetWindowSizeCallback(onResize)
-	glfw.SetWindowCloseCallback(onClose)*/
-	
 	return true
 }
 
-func (w *Window) onResize(width, height int) {
-	
-}
-
-func (w *Window) onClose() int {
-	w.Close()
+func onClose() int {
+	window.Stop()
 	return 1
 }
 

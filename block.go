@@ -2,8 +2,9 @@ package main
 
 
 type Block struct {
-	xz uint8
-	y uint8
+/*	xz uint8
+	y uint8*/ // don't need them, get the position with position in chunk
+	
 //	data uint // size??
 	
 	visibleSides uint8 // +x -x +y -y +z -z
@@ -13,18 +14,18 @@ type Block struct {
 	DisplayList uint
 }
 
-func (b *Block) Init(parentChunk *Chunk, x uint8, y uint8, z uint8) {
+func (b *Block) Init(parentChunk *Chunk/*, x uint8, y uint8, z uint8*/) {
 	b.parentChunk = parentChunk
 	
-	b.y = y
-	b.xz = x + z*16
+/*	b.y = y
+	b.xz = x + z*16*/
 	
 	b.visibleSides = 0
 }
-
+/*
 func (b *Block) GetPosition() (x uint8, y uint8, z uint8) {
 	return b.xz%16, b.y, b.xz/16
-}
+}*/
 
 func (b *Block) SetVisibleSidePlusX(visible bool) {
 	if visible {

@@ -2,6 +2,8 @@ package main
 
 import (
 	"flag"
+	"time"
+	"math/rand"
 )
 
 var flagWidth = flag.Int("width", 800, "width of the window")
@@ -14,6 +16,9 @@ var flagVSync = flag.Bool("vsync", true, "enable VSync")
 func main() {
 	println("starting")
 	flag.Parse()
+	
+	// Regenerate the random list
+	rand.Seed(time.Now().Unix())
 	
 	var mWindow Window
 	mWindow.Start()

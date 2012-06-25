@@ -10,11 +10,29 @@ import (
 type Renderer struct {
 	timeCurrent, timeNextSecond, frames int
 	
-	mWorld *World
+	world *World
+	camera *Camera
+	
+	NewWindowSize bool
+	
+	keepRunning bool
 }
 
-func (r *Renderer) Init(world *World) {
-	r.mWorld = world
+var renderer *Renderer
+
+
+func (r *Renderer) Init(world *World, camera *Camera) {
+	renderer = r
+	
+	r.world = world
+	r.camera = camera
+	
+	r.NewWindowSize = false
+	
+	r.keepRunning = true
+	
+	// callback
+	glfw.SetWindowSizeCallback(onResize)
 }
 
 func (r *Renderer) InitGL() {
@@ -40,9 +58,10 @@ func (r *Renderer) InitGL() {
 	gl.LoadIdentity()
 	glu.Perspective(45.0, float64(width)/float64(height), 0.1, 100.0)
 	glu.LookAt(
-		0, 0, -50, // position
-		0, 0, 1, // direction
-		0, 1, 0) // up
+		r.camera.PosX, r.camera.PosY, r.camera.PosZ, // position
+		r.camera.DirX, r.camera.DirY, r.camera.DirZ, // direction
+		r.camera.UpX,  r.camera.UpY,  r.camera.UpZ ) // up
+	
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.LoadIdentity()
 	
@@ -149,18 +168,61 @@ func (r *Renderer) CreateChunk(chunk *Chunk) {
 }
 
 func (r *Renderer) drawScene() {
-	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-	gl.LoadIdentity()
+//	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+//	gl.LoadIdentity()
 	
 	glfw.SwapBuffers()
 	
 	r.frames++
 	r.timeCurrent = GetTime()
 	if r.timeCurrent >= r.timeNextSecond {
-		println(r.frames)
+		println(r.frames, "fps")
 		
 		r.frames = 0
 		r.timeNextSecond = r.timeNextSecond + 1000
 	}
+}
+
+func (r *Renderer) Start() {
+	println("Renderer::Start")
+	defer println("END Renderer::Start")
+	
+	for r.keepRunning {
+		if r.NewWindowSize == true {
+			width, height := glfw.WindowSize()
+			
+			if height == 0 {
+				height = 1
+			}
+			
+			gl.Viewport(0, 0, width, height)
+/*			gl.MatrixMode(gl.PROJECTION)
+			gl.LoadIdentity()*/
+			glu.Perspective(45.0, float64(width)/float64(height), 0.1, 100.0)
+		}
+		
+		if r.camera.NewPosition == true {
+			r.camera.NewPosition = false
+			glu.LookAt(
+				r.camera.PosX, r.camera.PosY, r.camera.PosZ, // position
+				r.camera.DirX, r.camera.DirY, r.camera.DirZ, // direction
+				r.camera.UpX,  r.camera.UpY,  r.camera.UpZ ) // up
+		}
+		
+		r.drawScene()
+	}
+}
+
+func (r *Renderer) Stop() {
+	r.keepRunning = false
+}
+
+
+  ///////////////
+ // Callbacks //
+///////////////
+
+func onResize(width, height int) {
+	renderer.NewWindowSize = true
 }
 
