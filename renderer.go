@@ -150,6 +150,8 @@ func (r *Renderer) createBlock(block *Block) {
 }
 
 func (r *Renderer) CreateChunk(chunk *Chunk) {
+	sw := Stopwatch()
+	
 	if chunk == nil {
 		return
 	}
@@ -165,6 +167,8 @@ func (r *Renderer) CreateChunk(chunk *Chunk) {
 			}
 		}
 	}
+	
+	println("CreateChunk time:", sw.Stop(), "ms")
 }
 
 func (r *Renderer) drawScene() {
@@ -189,6 +193,8 @@ func (r *Renderer) Start() {
 	
 	for r.keepRunning {
 		if r.NewWindowSize == true {
+			r.NewWindowSize = false
+			
 			width, height := glfw.WindowSize()
 			
 			if height == 0 {

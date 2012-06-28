@@ -44,6 +44,7 @@ func (w *Window) Start() {
 	go w.input.Start()
 	
 	w.keepRunning = true
+	
 	for w.keepRunning {
 		time.Sleep(100 * time.Millisecond)
 	}

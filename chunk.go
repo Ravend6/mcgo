@@ -1,7 +1,6 @@
 package main
 
 import (
-	"time"
 )
 
 
@@ -19,7 +18,8 @@ func (c *Chunk) GetBlocks() (blocks *[16][256][16]*Block) {
 }
 
 func (c *Chunk) UpdateAllVisibleSides() {
-	now := time.Now()
+	sw := Stopwatch()
+	
 	var zStartSecond bool = false
 	// go through all block
 	for indexX, _ := range c.blocks {
@@ -38,7 +38,7 @@ func (c *Chunk) UpdateAllVisibleSides() {
 			}
 		}
 	}
-	println("UpdateAllVisibleSides time:", time.Now().Sub(now)/1000, "ms")
+	println("UpdateAllVisibleSides time:", sw.Stop(), "ms")
 }
 
 func (c *Chunk) UpdateBlockVisibleSides(posX, posY, posZ *int) {

@@ -42,9 +42,6 @@ func (i *Input) Stop() {
 	i.keepRunning = false
 }
 
-func (i *Input) initGL() {
-}
-
 
   ///////////////
  // Callbacks //
