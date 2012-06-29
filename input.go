@@ -6,7 +6,7 @@ import (
 )
 
 type Input struct {
-	camera Camera
+	camera *Camera
 	window *Window
 	
 	keepRunning bool
@@ -14,14 +14,10 @@ type Input struct {
 
 var input *Input
 
-func (i *Input) Init(window *Window) {
+func (i *Input) Init(window *Window, camera *Camera) {
 	input = i
 	i.window = window
-	
-	i.camera.Init(
-		0, 0, -50, // position
-		0, 0, 1, // direction
-		0, 1, 0) // up
+	i.camera = camera
 	
 	i.keepRunning = true
 }

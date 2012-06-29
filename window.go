@@ -32,12 +32,17 @@ func (w *Window) Start() {
 	// callback
 	glfw.SetWindowCloseCallback(onClose)
 	
+	w.camera.Init(
+		0, 0, -20, // position
+		0, 0, 1, // direction
+		0, 1, 0) // up
+	
 	w.world.Init(&w.renderer)
 	
 	w.renderer.Init(&w.world, &w.camera)
 	w.renderer.InitGL()
-	
-	w.input.Init(w)
+
+	w.input.Init(w, &w.camera)
 	
 	// run threads
 	go w.renderer.Start()

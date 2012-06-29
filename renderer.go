@@ -54,6 +54,7 @@ func (r *Renderer) InitGL() {
 	}
 	
 	gl.Viewport(0, 0, width, height)
+
 	gl.MatrixMode(gl.PROJECTION)
 	gl.LoadIdentity()
 	glu.Perspective(45.0, float64(width)/float64(height), 0.1, 100.0)
@@ -69,7 +70,7 @@ func (r *Renderer) InitGL() {
 	r.frames = 0
 }
 
-func (r *Renderer) createBlock(block *Block) {
+func (r *Renderer) createBlock(block *Block, x , y, z int) {
 	if block == nil || block.IsVisible() == false {
 		return
 	}
@@ -79,6 +80,8 @@ func (r *Renderer) createBlock(block *Block) {
 	block.DisplayList = gl.GenLists(1)
 	gl.NewList(block.DisplayList, gl.COMPILE)
 	gl.Materialfv(gl.FRONT, gl.AMBIENT_AND_DIFFUSE, []float32{0.5, 0.5, 0.5, 1.0})
+	
+	gl.Translatef(float32(x)+0.5, float32(y)+0.5, float32(z)+0.5)
 	
 	// +x
 	if plusX {
@@ -148,8 +151,9 @@ func (r *Renderer) createBlock(block *Block) {
 	
 	gl.EndList()
 }
-
+var chk *Chunk
 func (r *Renderer) CreateChunk(chunk *Chunk) {
+	chk = chunk
 	sw := Stopwatch()
 	
 	if chunk == nil {
@@ -158,10 +162,10 @@ func (r *Renderer) CreateChunk(chunk *Chunk) {
 	
 	for indexX, _ := range chunk.blocks {
 		for indexY, _ := range chunk.blocks[indexX] {
-			for _, block := range chunk.blocks[indexX][indexY] {
+			for indexZ, block := range chunk.blocks[indexX][indexY] {
 				if block != nil {
 					if block.IsVisible() {
-						r.createBlock(block)
+						r.createBlock(block, indexX, indexY, indexZ)
 					}
 				}
 			}
@@ -172,8 +176,22 @@ func (r *Renderer) CreateChunk(chunk *Chunk) {
 }
 
 func (r *Renderer) drawScene() {
-//	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 //	gl.LoadIdentity()
+	
+	for indexX, _ := range chk.blocks {
+		for indexY, _ := range chk.blocks[indexX] {
+			for _, block := range chk.blocks[indexX][indexY] {
+				if block != nil {
+					if block.IsVisible() {	
+						gl.PushMatrix()
+						gl.CallList(block.DisplayList)
+						gl.PopMatrix()
+					}
+				}
+			}
+		}
+	}
 	
 	glfw.SwapBuffers()
 	
