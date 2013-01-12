@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jteeuwen/glfw"
+	"github.com/go-gl/glfw"
 	"time"
 )
 

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/banthar/gl"
-	"github.com/banthar/glu"
-	"github.com/jteeuwen/glfw"
+	"github.com/go-gl/gl"
+	"github.com/go-gl/glu"
+	"github.com/go-gl/glfw"
 )
 
 
