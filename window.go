@@ -83,6 +83,11 @@ func (w *Window) openWindow() bool {
 		windowMode = glfw.Fullscreen
 	}
 	
+	glfw.OpenWindowHint(glfw.FSAA_SAMPLES, 4); // 4x antialiasing
+	glfw.OpenWindowHint(glfw.OPENGL_VERSION_MAJOR, 3); // We want OpenGL 3.3
+	glfw.OpenWindowHint(glfw.OPENGL_VERSION_MINOR, 3);
+	glfw.OpenWindowHint(glfw.OPENGL_PROFILE, glfw.OPENGL_CORE_PROFILE); //We don't want the old OpenGL
+	
 	// open window
 	err = glfw.OpenWindow(*flagWidth, *flagHeight, 8, 8, 8, 8, 24, 0, windowMode)
 	if err != nil {
