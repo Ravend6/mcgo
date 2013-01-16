@@ -4,6 +4,7 @@ import (
 	"github.com/go-gl/gl"
 	"github.com/go-gl/glu"
 	"github.com/go-gl/glfw"
+//	"github.com/skelterjohn/go.matrix" (use this as a glm replacement or port glm?)
 )
 
 
@@ -12,6 +13,8 @@ type Renderer struct {
 	
 	world *World
 	camera *Camera
+	
+	vertexBuffer gl.Buffer
 	
 	NewWindowSize bool
 	
@@ -40,7 +43,28 @@ func (r *Renderer) InitGL() {
 		glfw.SetSwapInterval(1)
 	}
 	
-	gl.ShadeModel(gl.SMOOTH)
+	// Init GL
+	gl.Experimental = true
+	if gl.Init() != gl.OK {
+		log.Fatalln("Failed to initialize GL")
+	}
+	
+	// Init VAO
+	vertexArray := gl.GenVertexArray()
+	vertexArray.Bind()
+	
+	// Init VBO
+	vertexBufferData := []float32{0, 1, 0, -1, -1, 0, 1, -1, 0}
+	r.vertexBuffer = gl.GenVertexBuffer()
+	r.vertexBuffer.Bind(gl.ARRAY_BUFFER)
+	r.vertexBuffer.BufferData(gl.ARRAY_BUFFER, len(vertexBufferData)*4, vertexBufferData, gl.STATIC_DRAW)
+	
+	// Init FPS counter
+	r.timeNextSecond = 1000
+	r.frames = 0
+	
+	
+/*	gl.ShadeModel(gl.SMOOTH)
 	gl.ClearColor(0, 0, 0, 0)
 	gl.ClearDepth(1)
 	gl.Enable(gl.DEPTH_TEST)
@@ -64,10 +88,7 @@ func (r *Renderer) InitGL() {
 		r.camera.UpX,  r.camera.UpY,  r.camera.UpZ ) // up
 	
 	gl.MatrixMode(gl.MODELVIEW)
-	gl.LoadIdentity()
-	
-	r.timeNextSecond = 1000
-	r.frames = 0
+	gl.LoadIdentity()*/
 }
 
 func (r *Renderer) createBlock(block *Block, x , y, z int) {
@@ -177,7 +198,24 @@ func (r *Renderer) CreateChunk(chunk *Chunk) {
 
 func (r *Renderer) drawScene() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-//	gl.LoadIdentity()
+	
+	// first attribute buffer: vertices
+	var vertexAttrib gl.AttribLocation = 0
+	vertexAttrib.EnableArray()
+	r.vertexBuffer.Bind(gl.ARRAY_BUFFER)
+	vertexAttrib.AttribPointer(
+		3,     // size
+		false, // normalized?
+		0,     // stride
+		nil) // array buffer offset
+	
+	// draw the triangle
+	gl.DrawArrays(gl.TRIANGLES, 0, 3)
+	
+	vertexAttrib.DisableArray()
+	
+	
+/*	gl.LoadIdentity()
 	
 	for indexX, _ := range chk.blocks {
 		for indexY, _ := range chk.blocks[indexX] {
@@ -191,7 +229,7 @@ func (r *Renderer) drawScene() {
 				}
 			}
 		}
-	}
+	}*/
 	
 	glfw.SwapBuffers()
 	
