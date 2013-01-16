@@ -10,8 +10,6 @@ type Block struct {
 	visibleSides uint8 // +x -x +y -y +z -z
 	
 	parentChunk *Chunk
-	
-	DisplayList uint
 }
 
 func (b *Block) Init(parentChunk *Chunk/*, x uint8, y uint8, z uint8*/) {
@@ -76,13 +74,13 @@ func (b *Block) SetVisibleSideMinusZ(visible bool) {
 }
 
 func (b *Block) IsVisible() (visible bool) {
-	if (b.visibleSides & 0x3f) == 0 {
+	if GetVisibleSides() == 0 {
 		return false
 	}
 	return true
 }
 
-func (b *Block) GetVisibleSides() (plusX, minusX, plusY, minusY, plusZ, minusZ bool) {
+func (b *Block) GetVisibleSidesBool() (plusX, minusX, plusY, minusY, plusZ, minusZ bool) {
 	if (b.visibleSides & 0x1) > 0 {
 		plusX = true
 	}
@@ -103,5 +101,9 @@ func (b *Block) GetVisibleSides() (plusX, minusX, plusY, minusY, plusZ, minusZ b
 	}
 	
 	return
+}
+
+func (b *Block) GetVisibleSides() uint8 {
+	return (b.visibleSides & 0x3f)
 }
 
