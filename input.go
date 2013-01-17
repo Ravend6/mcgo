@@ -63,7 +63,7 @@ func onKey(key, state int) {
 			input.camera.PosX += input.camera.DirX
 			input.camera.PosY += input.camera.DirY
 			input.camera.PosZ += input.camera.DirZ
-			input.camera.NewPosition = 2
+			input.camera.NewPosition = true
 			
 			input.camera.LogPosition()
 		}
@@ -72,7 +72,7 @@ func onKey(key, state int) {
 			input.camera.LogPosition()
 			
 			
-			input.camera.NewPosition = 2
+			input.camera.NewPosition = true
 			
 			input.camera.LogPosition()
 		}
@@ -81,7 +81,7 @@ func onKey(key, state int) {
 			input.camera.LogPosition()
 			
 			
-			input.camera.NewPosition = 2
+			input.camera.NewPosition = true
 			
 			input.camera.LogPosition()
 		}
@@ -90,7 +90,7 @@ func onKey(key, state int) {
 			input.camera.LogPosition()
 			
 			
-			input.camera.NewPosition = 2
+			input.camera.NewPosition = true
 			
 			input.camera.LogPosition()
 		}

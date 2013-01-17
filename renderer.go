@@ -55,9 +55,9 @@ func (r *Renderer) InitGL() {
 	
 	// Init VBO
 	vertexBufferData := []float32{0, 1, 0, -1, -1, 0, 1, -1, 0}
-	r.vertexBuffer = gl.GenVertexBuffer()
+	r.vertexBuffer = gl.GenBuffer()
 	r.vertexBuffer.Bind(gl.ARRAY_BUFFER)
-	r.vertexBuffer.BufferData(gl.ARRAY_BUFFER, len(vertexBufferData)*4, vertexBufferData, gl.STATIC_DRAW)
+	gl.BufferData(gl.ARRAY_BUFFER, len(vertexBufferData)*4, vertexBufferData, gl.STATIC_DRAW)
 	
 	// Init FPS counter
 	r.timeNextSecond = 1000
@@ -96,7 +96,7 @@ func (r *Renderer) createBlock(block *Block, x , y, z int) {
 		return
 	}
 	
-	plusX, minusX, plusY, minusY, plusZ, minusZ := block.GetVisibleSides()
+/*	plusX, minusX, plusY, minusY, plusZ, minusZ := block.GetVisibleSidesBool()
 	
 	block.DisplayList = gl.GenLists(1)
 	gl.NewList(block.DisplayList, gl.COMPILE)
@@ -170,8 +170,9 @@ func (r *Renderer) createBlock(block *Block, x , y, z int) {
 		gl.End()
 	}
 	
-	gl.EndList()
+	gl.EndList()*/
 }
+
 var chk *Chunk
 func (r *Renderer) CreateChunk(chunk *Chunk) {
 	chk = chunk
@@ -204,10 +205,11 @@ func (r *Renderer) drawScene() {
 	vertexAttrib.EnableArray()
 	r.vertexBuffer.Bind(gl.ARRAY_BUFFER)
 	vertexAttrib.AttribPointer(
-		3,     // size
-		false, // normalized?
-		0,     // stride
-		nil) // array buffer offset
+		3,        // size
+		gl.FLOAT, // typ
+		false,    // normalized?
+		0,        // stride
+		nil)      // array buffer offset
 	
 	// draw the triangle
 	gl.DrawArrays(gl.TRIANGLES, 0, 3)

@@ -6,7 +6,7 @@ type Camera struct {
 	DirX, DirY, DirZ float64
 	UpX, UpY, UpZ float64
 	
-	NewPosition int
+	NewPosition bool
 }
 
 func (c *Camera) Init(posX, posY, posZ, dirX, dirY, dirZ, upX, upY, upZ float64) {
@@ -22,7 +22,7 @@ func (c *Camera) Init(posX, posY, posZ, dirX, dirY, dirZ, upX, upY, upZ float64)
 	c.UpY = upY
 	c.UpZ = upZ
 	
-	c.NewPosition = 3
+	c.NewPosition = true
 }
 
 func (c *Camera) LogPosition() {
