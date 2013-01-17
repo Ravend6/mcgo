@@ -39,6 +39,36 @@ func (c *Chunk) UpdateAllVisibleSides() {
 		}
 	}
 	println("UpdateAllVisibleSides time:", sw.Stop(), "ms")
+	
+	var numSides = 0
+	for indexX, _ := range c.blocks {
+		for indexY, _ := range c.blocks[indexX] {
+			for indexZ, _ := range c.blocks[indexX][indexY] {
+				if c.blocks[indexX][indexY][indexZ] != nil {
+					plusX, minusX, plusY, minusY, plusZ, minusZ := c.blocks[indexX][indexY][indexZ].GetVisibleSidesBool()
+					if plusX {
+						numSides++
+					}
+					if minusX {
+						numSides++
+					}
+					if plusY {
+						numSides++
+					}
+					if minusY {
+						numSides++
+					}
+					if plusZ {
+						numSides++
+					}
+					if minusZ {
+						numSides++
+					}
+				}
+			}
+		}
+	}
+	println("num visible sides: ", numSides)
 }
 
 func (c *Chunk) UpdateBlockVisibleSides(posX, posY, posZ *int) {

@@ -74,7 +74,7 @@ func (b *Block) SetVisibleSideMinusZ(visible bool) {
 }
 
 func (b *Block) IsVisible() (visible bool) {
-	if GetVisibleSides() == 0 {
+	if b.GetVisibleSides() == 0 {
 		return false
 	}
 	return true

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"github.com/go-gl/gl"
 	"github.com/go-gl/glu"
 	"github.com/go-gl/glfw"
@@ -44,8 +45,7 @@ func (r *Renderer) InitGL() {
 	}
 	
 	// Init GL
-	gl.Experimental = true
-	if gl.Init() != gl.OK {
+	if gl.Init() != gl.NO_ERROR {
 		log.Fatalln("Failed to initialize GL")
 	}
 	
@@ -287,4 +287,3 @@ func (r *Renderer) Stop() {
 func onResize(width, height int) {
 	renderer.NewWindowSize = true
 }
-

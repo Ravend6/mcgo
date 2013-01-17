@@ -43,7 +43,6 @@ func (i *Input) Stop() {
  // Callbacks //
 ///////////////
 
-
 func onMouseButton(button, state int) {
 	
 }
@@ -54,8 +53,47 @@ func onMouseWheel(delta int) {
 
 func onKey(key, state int) {
 //	println("key", key, state)
-	if key == glfw.KeyEsc {
+	switch key {
+	case glfw.KeyEsc:
 		input.window.Stop()
+	case glfw.KeyUp:
+		if state == glfw.KeyRelease {
+			input.camera.LogPosition()
+			
+			input.camera.PosX += input.camera.DirX
+			input.camera.PosY += input.camera.DirY
+			input.camera.PosZ += input.camera.DirZ
+			input.camera.NewPosition = 2
+			
+			input.camera.LogPosition()
+		}
+	case glfw.KeyDown:
+		if state == glfw.KeyRelease {
+			input.camera.LogPosition()
+			
+			
+			input.camera.NewPosition = 2
+			
+			input.camera.LogPosition()
+		}
+	case glfw.KeyLeft:
+		if state == glfw.KeyRelease {
+			input.camera.LogPosition()
+			
+			
+			input.camera.NewPosition = 2
+			
+			input.camera.LogPosition()
+		}
+	case glfw.KeyRight:
+		if state == glfw.KeyRelease {
+			input.camera.LogPosition()
+			
+			
+			input.camera.NewPosition = 2
+			
+			input.camera.LogPosition()
+		}
 	}
 }
 

@@ -2,7 +2,7 @@ package main
 
 import (
 	"container/list"
-	"math/rand"
+	//"math/rand"
 )
 
 type World struct {
@@ -26,12 +26,12 @@ func (w *World) Init(rend *Renderer) {
 	for indexX, _ := range chunk.blocks {
 		for indexY, _ := range chunk.blocks[indexX] {
 			for indexZ, _ := range chunk.blocks[indexX][indexY] {
-				if rand.Intn(4) == 0 {
+				//if rand.Intn(4) == 0 {
 					count++
 					var b Block
 					b.Init(chunk)
 					chunk.blocks[indexX][indexY][indexZ] = &b
-				}
+				//}
 			}
 		}
 	}
@@ -42,5 +42,4 @@ func (w *World) Init(rend *Renderer) {
 	
 	println("Generated blocks in chunk:", count)
 }
-
 
